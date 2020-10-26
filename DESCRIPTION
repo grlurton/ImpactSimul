@@ -1,0 +1,20 @@
+Package: ImpactSimul
+Title: ImpactSimul
+Version: 0.1
+Authors@R: person("Adrien", "Allorant", email = "allorant@uw.edu",
+                  role = c("aut", "cre"))
+          person("Grégoire", "Lurton", email = "gregoire.lurton@gmail.com",
+                  role = c("aut", "cre"))
+Description: ImpactSimul provides a simple framework to simulate the potential impact of HIV programs.
+Depends: R (>= 3.5.0)
+License: MIT
+LazyData: true
+Imports: 
+    dplyr,    
+    data.table,
+    stringr,
+    reshape2,
+    stats,
+    reticulate
+RoxygenNote: 7.1.1
+Encoding: UTF-8

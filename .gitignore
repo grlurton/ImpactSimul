@@ -1,0 +1,8 @@
+*.csv
+.DS_Store
+.vscode
+.RData
+.Rhistory
+.Rproj.user/
+.Rbuildignore
+ImpactSimul.Rproj
