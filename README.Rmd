@@ -1,23 +1,30 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 
 # ImpactSimul
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
-ImpactSimul is an Agent Based Model aimed at helping estimate the impact
-of an intervention in an HIV program, using a simple and tractable
-approach. It was first developed to estimate the impact to be expected
-from Solthis’ Empower II program. It is written in R.
+ImpactSimul is an Agent Based Model aimed at helping estimate the impact of an intervention in an HIV program, using a simple and tractable approach. It was first developed to estimate the impact to be expected from Solthis’ Empower II program. It is written in R.
 
 ## Installation
 
 ### Install the R package
 
-You can install ImpactSimul from [GitHub](https://github.com/) just by
-running:
+You can install ImpactSimul from [GitHub](https://github.com/) just by running:
 
 ``` r
 # install.packages("devtools")
@@ -26,42 +33,28 @@ devtools::install_github("grlurton/ImpactSimul")
 
 ### Install Python
 
-To obtain epidemiological data on a country, ImpactSim uses a Python
-script that queries the UNAIDS database and gets standardized data. To
-get this running, we need to set-up a python environment and download
-*chromedriver*. You shouldn’t have to write any line of Python and will
-use the script `unaids_scrap.py` which you can find under `/utils` in in
-this repo which you can put into the `utils` directory in your project’s
-folder..
+To obtain epidemiological data on a country, ImpactSim uses a Python script that queries the UNAIDS database and gets standardized data. To get this running, we need to set-up a python environment and download _chromedriver_. You shouldn't have to write any line of Python and will use the script `unaids_scrap.py` which you can find under `/utils` in in this repo which you can put into the `utils` directory in your project's folder..
 
-We suggest installing Python using Anaconda. 1. Go to
-<https://www.anaconda.com/products/individual> 2. Download the
-appropriate installer for your operating system. 3.Just double-click the
-downloaded file. In most cases, you can just keep all default options in
-the installer.
+We suggest installing Python using Anaconda.
+1. Go to https://www.anaconda.com/products/individual
+2. Download the appropriate installer for your operating system.
+3.Just double-click the downloaded file. In most cases, you can just keep all default options in the installer.
 
 ### Load the conda environment
 
-To install the Python libraries you’ll need for the extraction, you just
-need to install the conda environment `ImpactSimulEnv.yml` which you can
-find under `/utils` in this repo.
+To install the Python libraries you'll need for the extraction, you just need to install the conda environment `ImpactSimulEnv.yml` which you can find under `/utils` in this repo.
 
-Once you have downloaded it, just open a terminal in the directory you
-have downloaded it in, and run the following code.
+Once you have downloaded it, just open a terminal in the directory you have downloaded it in, and run the following code.
 
 ``` bash
 conda env create -f ImpactSimulEnv.yml -n ImpactSimul
 ```
 
 ### Install ChromeDriver
+1.	Install the Chrome web browser, available on https://www.google.com/chrome/
+2.	Download ChromeDriver from https://chromedriver.chromium.org/downloads .  Make sure you pick the driver corresponding to your version of the Chrome browser.
+3.	Unzip ChromeDriver, and move the file into the `utils` directory in your project's folder
 
-1.  Install the Chrome web browser, available on
-    <https://www.google.com/chrome/>
-2.  Download ChromeDriver from
-    <https://chromedriver.chromium.org/downloads> . Make sure you pick
-    the driver corresponding to your version of the Chrome browser.
-3.  Unzip ChromeDriver, and move the file into the `utils` directory in
-    your project’s folder
 
 ## Example
 

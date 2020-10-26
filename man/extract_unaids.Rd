@@ -5,10 +5,12 @@
 \title{Extract data from a given pays from the UNAIDS database}
 \usage{
 extract_unaids(
+  conda_env,
   python_script,
   country,
-  url = "https://aidsinfo.unaids.org/",
-  outpath
+  path_to_chromedriver,
+  outpath,
+  url = "https://aidsinfo.unaids.org/"
 )
 }
 \arguments{
@@ -16,9 +18,9 @@ extract_unaids(
 
 \item{country}{country of interest}
 
-\item{url}{url to unaids website}
-
 \item{outpath}{path to the file where the extraction will be written}
+
+\item{url}{url to unaids website}
 }
 \description{
 Extract data from a given pays from the UNAIDS database
