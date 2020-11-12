@@ -116,6 +116,8 @@ prop_male <- data$MeanNum[grepl(pattern = "Men aged 15 and over newly infected w
 ``` 
 All parameters are loaded and formated : TIME TO RUN A SIMULATION !!!
 
+We start by loading the parameters set in the differnet previous stages. Note the size of the cohort is set in object `init`.
+
 ```r
 ##############################
 ### Running the simulation ###
@@ -126,7 +128,7 @@ param <- params(time.unit = time.unit)
 init <- init(i.prev.male = 1,
              i.prev.feml = 1,
              max.inf.time = 15 * 365,
-             n=param$N)
+             n=2655)
 
 
 ## Here, this loop takes all the scenarios found in the folder with the scenarios yaml, and runs them one ## by one, keeping the results in separate objects.
