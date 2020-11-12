@@ -209,7 +209,7 @@ c(mean(DALYs_0$DALYs - DALYs_1$DALYs),
 `ImpactSimul` uses Agent Based Simulation (ABM) in which individual patients are being created, and their evolution is simulated in time through multiple steps. This approach is flexibe, and allows to estimate the impact of the modification of some hypothesis underlying the parameters used to make the population evolve in time, such as, for example, the average mortality rate or other characteristics.
 
 
-![Drag Racing](img/Schema_model.png)
+![Drag Racing](https://github.com/grlurton/ImpactSimul/blob/main/img/Schema_model.PNG)
 
 
 `ImpactSimul` uses a model in which patients can enter at any period during the time of the simulation. He then undergoes a series of transitions going through acute, asymptomatic and symptomatic HIV infection. At each period, he has an occasion to enter the care system, and to evolve through it.
@@ -232,4 +232,4 @@ The set of parameters are supposed to be indicative of different domains of HIV 
     *	_Numerator_: N patients LTFU on a given year 
     *	_Denominator_: N patients on treatment on a given year
     
-The different parameters can be specified in yaml files that can be stored under `params/scenarios` in your project (or another directory to be stipulated). An example file is provided [on this repo](/params/scenario).
+The different parameters can be specified in yaml files that can be stored under `params/scenarios` in your project (or another directory to be stipulated). An example file is provided [on this repo](/params/scenarios).

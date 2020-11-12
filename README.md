@@ -233,7 +233,8 @@ the impact of the modification of some hypothesis underlying the
 parameters used to make the population evolve in time, such as, for
 example, the average mortality rate or other characteristics.
 
-![Drag Racing](img/Schema_model.png)
+![Drag
+Racing](https://github.com/grlurton/ImpactSimul/blob/main/img/Schema_model.PNG)
 
 `ImpactSimul` uses a model in which patients can enter at any period
 during the time of the simulation. He then undergoes a series of
@@ -283,4 +284,4 @@ follows:
 The different parameters can be specified in yaml files that can be
 stored under `params/scenarios` in your project (or another directory to
 be stipulated). An example file is provided [on this
-repo](/params/scenario).
+repo](/params/scenarios).
