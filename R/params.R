@@ -51,7 +51,6 @@
 #' @seealso Use @param time.unit any time step [default = 7], and @param list_scenario
 #'          specified in a `yaml`. Run the parameterized model with \code{\link{run_abm}}
 
-#' @importFrom yaml yaml.load_file
 #' @export create_scenario_list
 create_scenario_list <- function(scenarios_folder="params/scenarios/"){
   list_scenarios_files <- list.files(scenarios_folder)

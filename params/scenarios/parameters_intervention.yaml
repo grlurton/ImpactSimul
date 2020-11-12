@@ -1,0 +1,45 @@
+---
+params_impact:
+  hiv.coverage:
+    label: "National annual testing coverage"
+    value: .3
+    min: 0
+    max: 1
+  tx.cd4.detect:
+    label: "Minimum cd4 count after which patients seek care at health facilities"
+    value: 200
+    min: 0
+    max: 500
+  tx.init.cd4.mean:
+    label: "Mean cd4 count at ART initiation"
+    value: 350
+    min: 0
+    max: 500
+  tx.init.cd4.sd:
+    label: "Standard deviation cd4 count at ART initiation"
+    value: 50
+    min: 0
+    max: 500
+  tx.coverage:
+    label: "ART coverage"
+    value: .7
+    min: 0
+    max: 1
+  tx.adhere.full:
+    label: "Proportion of fully adherent patients"
+    value: .8
+    min: 0
+    max: 1
+  tx.adhere.part:
+    label: "Proportion of patients, among those that are not fully adherent, that take their treatment from time to time"
+    value: .5
+    min: 0
+    max: 1
+  lfu.prop:
+    label: "Annual proportion of patients being lost to follow-up"
+    value: .05
+    min: 0
+    max: 1
+
+
+

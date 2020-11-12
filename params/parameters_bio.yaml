@@ -1,0 +1,92 @@
+params_demographic:
+  life.exp.feml:
+    label: "life expectancy females"
+    value: 53.8
+  life.exp.male:
+    label: "life expectancy males"
+    value: 52.5
+params_bio:
+  age.mean:
+    label: "mean age cohort patients"
+    value: 30
+    min: 15
+    max: 55
+  age.median: 
+    label: "median age cohort patients"
+    value: 25
+    min: 15
+    max: 55
+  base.cd4:
+    label: "cd4 count at infection"
+    value: 520
+    min: 400
+    max: 1000
+  di.cd4.aids:
+    label: "cd4 count AIDS"
+    value: 200
+    min: 0
+    max: 100
+  di.cd4.rate:
+    label: "daily death rate AIDS"
+    value: .00548
+    min: 0
+    max: 1
+  base.tprob.male:
+    label: "baseline probability transmission male"
+    value: .000043
+  base.tprob.feml:
+    label: "baseline probability transmission female"
+    value: .000022
+  act.rate.early:
+    label: "daily rate sexual act in early phases of infection"
+    value: .362
+  act.rate.late:
+    label: "daily rate sexual act in later stages of infection"
+    value: .197
+  act.rate.cd4:
+    label: "threshold cd4 count value at which patients switch from early to later stages"
+    value: 200
+  tx.cd4.recrat.feml:
+    label: "daily increase in cd4 count after treatment initiation for females"
+    value: .3867
+  tx.cd4.recrat.male:
+    label: "daily increase in cd4 count after treatment initiation for males"
+    value: .325   
+  tx.cd4.decrat.feml:
+    label: "daily decrease in cd4 count after treatment interruption for females"
+    value: .3867
+  tx.cd4.decrat.male:
+    label: "daily decrease in cd4 count after treatment interruption for males"
+    value: .325     
+  tx.vlsupp.time:
+    label: "time in weeks from treatment initiation to viral suppression"
+    value: 121.75
+  tx.vlsupp.level:
+    label: "Log 10 viral load level at suppression"
+    value: 1.5
+  vl.acute.topeak:
+    label: "time in weeks to peak viremia during acute infection"
+    value: 14
+  vl.acute.toset:
+    label: "time in weeks to viral set point following peak viremia"
+    value: 14
+  vl.acute.peak:
+    label: "Log 10 viral load at acute peak"
+    value: 6.7
+  vl.acute.setpoint:
+    label: "Log 10 viral load at set point"
+    value: 4.5
+  vl.aidsmax:
+    label: "Maximum log 10 viral load during AIDS"
+    value: 7
+Disability_weights:
+  hiv:
+    label: "Disability weights for HIV cases (source GBD)"
+    value: .135
+  aids_no_art:
+    label: "Disability weights for AIDS cases not on ART (source GBD)"
+    value: .505
+  aids_art:
+    label: "Disability weights for AIDS cases on ART (source GBD)"
+    value: .167
+
