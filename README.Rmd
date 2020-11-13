@@ -144,9 +144,11 @@ res_0 <- summary_outcomes(result_parameters_baseline)
 res_1 <- summary_outcomes(result_parameters_intervention)
 
 # Combined
+
 res <- bind_rows(
   tibble(
     Death = res_0$death$deaths,
+    simul = res_0$death$simul,
     `New infection` = res_0$newInf$newInf,
     `Lost to follow-up` = res_0$LTFU$LTFU,
     `On treatment` = res_0$onTrt$onTrt,
@@ -158,6 +160,7 @@ res <- bind_rows(
   ),
   tibble(
     Death = res_1$death$deaths,
+    simul = res_1$death$simul,
     `New infection` = res_1$newInf$newInf,
     `Lost to follow-up` = res_1$LTFU$LTFU,
     `On treatment` = res_1$onTrt$onTrt,
