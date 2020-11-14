@@ -20,18 +20,16 @@
 #' @export run_simulations
 run_simulations <- function(init, param, scenario_simulation, intervention_start = 0, prop_male, nsteps = 52 * 5, nsim = 100){
   
-  out <- c()
-
   res <- lapply(1:nsim, function(sim){
     res <- run_abm(init, param, scenario_simulation, intervention_start = 0, prop_male, nsteps = nsteps)
-
+    
     if(sim %% 2 == 0){
       cat("simulation = ", sim,"\n" )
     }
     return(res)
   })
   
-  out <- c(out, res)
+  out <- res
   
   return(out)
   
