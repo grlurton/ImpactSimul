@@ -2,6 +2,7 @@
 
 export(DALY_comparison)
 export(calculate_DALYs)
+export(compare_table)
 export(create_scenario_list)
 export(extract_unaids)
 export(init)

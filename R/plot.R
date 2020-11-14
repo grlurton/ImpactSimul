@@ -115,3 +115,40 @@ make_pyramid <- function(summary_results){
     scale_fill_brewer(palette = "Set1") + 
     theme_bw()
 }
+
+
+
+
+
+mean_sample <- function(value, scenario, scen_1, scen_2){
+  dv <- sample(value[scenario == scen_2],1000,replace=T) - sample(value[scenario == scen_1], 1000,replace=T)
+  out <- mean(dv, na.rm = T)
+  return(out)
+}
+
+mean_quantile <- function(value, scenario, scen_1, scen_2, probs){
+  dv <- sample(value[scenario == scen_2],1000,replace=T) - sample(value[scenario == scen_1], 1000,replace=T)
+  out <- quantile(dv, probs)
+  return(out)
+}
+
+#' @title Return comparison table
+#' @param summary_results object with simulations results (deaths, new infections, # patients off and on treatment, # of lost to follow-up)
+#'  from both the baseline and intervention scenarios
+#' @return 
+#' @export
+compare_table <- function(data, scen_1, scen_2){
+  data <- data %>% group_by(scenario, simul) %>% mutate("New infection" = cumsum(`New infection`),
+                                                        "Death" = cumsum(Death)) 
+  tab_out <- data[data$time == max(data$time),] %>%
+    data.table() %>%
+    melt.data.table() %>%
+    group_by(variable) %>%
+    summarize(baseline = mean(value[scenario == scen_1]),
+              intervention= mean(value[scenario == scen_2]),
+              mean = mean_sample(value, scenario ,scen_2=scen_2, scen_1=scen_1),
+              q2.5 = mean_quantile(value, scenario ,scen_2=scen_2, scen_1=scen_1, probs = .025),
+              q97.5 = mean_quantile(value, scenario ,scen_2=scen_2, scen_1=scen_1, probs = .975)) %>%
+    ungroup()
+  return(tab_out)
+}

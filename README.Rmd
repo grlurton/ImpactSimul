@@ -64,6 +64,7 @@ library("readxl")
 library(dplyr)
 library(yaml)
 library(reticulate)
+library(dplyr)
 
 download_data <- TRUE
 run_life_table <- TRUE
