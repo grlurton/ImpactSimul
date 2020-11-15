@@ -213,13 +213,18 @@ daly <- bind_rows(
 )
 ```
 
-Finally, making visualizations for better analysis of the results
+Finally, making visualizations for better analysis of the results and
+export import reslus
 
 ``` r
-make_pyramid(res)
+make_pyramid(res_0)
 
 
 result_comparison_plot(res)
+
+# Writing results to csv
+table_out <-compare_table(res, "baseline", "intervention")
+write.csv(table_out, "data/results/table_results.csv")
 
 
 DALY_comparison(daly)
@@ -240,8 +245,8 @@ the impact of the modification of some hypothesis underlying the
 parameters used to make the population evolve in time, such as, for
 example, the average mortality rate or other characteristics.
 
-![Drag
-Racing](https://github.com/grlurton/ImpactSimul/blob/main/img/Schema_model.PNG)
+![Model
+Schematic](https://github.com/grlurton/ImpactSimul/blob/main/img/Schema_model.PNG)
 
 `ImpactSimul` uses a model in which patients can enter at any period
 during the time of the simulation. He then undergoes a series of
