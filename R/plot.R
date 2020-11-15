@@ -37,9 +37,9 @@ result_comparison_plot <- function(res){
                           data.table() %>%
                           melt.data.table(id.vars = c("time","scenario")) %>%
                           group_by(time,scenario, variable) %>%
-                          summarize(mean = mean(value),
-                                    q2.5 = quantile(value, probs = .025),
-                                    q97.5 = quantile(value, probs = .975)))
+                          summarize(mean = mean(value, na.rm=TRUE),
+                                    q2.5 = quantile(value, probs = .025, na.rm=TRUE),
+                                    q97.5 = quantile(value, probs = .975, na.rm=TRUE)))
   
   gg <- ggplot(data = p, aes(x = time, y = mean, group = scenario)) +
     geom_line(aes(colour = scenario)) +
@@ -48,8 +48,8 @@ result_comparison_plot <- function(res){
     labs(x ='Time', y = 'Outcome',
          title = paste0("Simulation results")) +
     theme_bw() +
-    scale_fill_manual(values = c("#0d4e93", "#ffdc00")) +
-    scale_color_manual(values=c("#0d4e93", "#ffdc00"))+
+    scale_fill_manual(values = c("#0d4e93", "#ffaf37")) +
+    scale_color_manual(values=c("#0d4e93", "#ffaf37"))+
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(limits = c(0, NA))+
     guides(fill=FALSE) +
@@ -71,8 +71,8 @@ DALY_comparison <- function(daly){
   
   ggplot(daly, aes(x=dalys, fill=scenario)) + geom_density(alpha=.3)+
     theme_bw() +
-    scale_fill_manual(values = c("#0d4e93", "#ffdc00")) +
-    scale_color_manual(values=c("#0d4e93", "#ffdc00")) +
+    scale_fill_manual(values = c("#0d4e93", "#ffaf37")) +
+    scale_color_manual(values=c("#0d4e93", "#ffaf37")) +
     labs(x ='DALYs', y = '',
          title = paste0("Simulation results")) +
     theme(strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
@@ -89,8 +89,9 @@ make_pyramid_data <- function(summary_results){
   pyr_data <- summary_results$pop %>% group_by(male, age) %>% tally()
   pyr_data$gender[pyr_data$male == 1] <- "Male"
   pyr_data$gender[pyr_data$male == 0] <- "Female"
-  pyr_data$n[pyr_data$male == 1] <- -pyr_data$n[pyr_data$male == 1]
-  return(summary_results)
+  pyr_data$n[pyr_data$male == 1] <- -pyr_data$n[pyr_data$male == 1] / sum(pyr_data$n[pyr_data$male == 1] )
+  pyr_data$n[pyr_data$male == 0] <- pyr_data$n[pyr_data$male == 0] / sum(pyr_data$n[pyr_data$male == 0] )
+  return(pyr_data)
 }
 
 #' @title Making Age Pyramid
@@ -103,14 +104,18 @@ make_pyramid_data <- function(summary_results){
 #' @importFrom ggplot2 geom_bar
 #' @importFrom ggplot2 coord_flip
 #' @importFrom ggplot2 scale_fill_brewer
+#' @importFrom ggplot2 fortify
+#' @importFrom dplyr tally
 make_pyramid <- function(summary_results){
-  pyr_data <- make_pyramid(summary_results)
+  pyr_data <- make_pyramid_data(summary_results)
+  m_axis <- max(pyr_data$n)
   
   ggplot(pyr_data, aes(x = age, y = n, fill = gender)) + 
     geom_bar(data = subset(pyr_data, gender == "Female"), stat = "identity") + 
     geom_bar(data = subset(pyr_data, gender == "Male"), stat = "identity") + 
-    scale_y_continuous(breaks = seq(-max(pyr_data$n), max(pyr_data$n), max(pyr_data$n) / 10), 
-                       labels = as.character(c(seq(max(pyr_data$n), 0, -max(pyr_data$n) / 10), seq(max(pyr_data$n) / 10, max(pyr_data$n), max(pyr_data$n) / 10)))) + 
+    scale_y_continuous(breaks = seq(-m_axis, m_axis, m_axis / 10), 
+                       labels = as.character(round(c(seq(m_axis, 0, -m_axis / 10), 
+                                                     seq(m_axis / 10,m_axis, m_axis / 10)), 3))) + 
     coord_flip() + 
     scale_fill_brewer(palette = "Set1") + 
     theme_bw()
@@ -128,7 +133,7 @@ mean_sample <- function(value, scenario, scen_1, scen_2){
 
 mean_quantile <- function(value, scenario, scen_1, scen_2, probs){
   dv <- sample(value[scenario == scen_2],1000,replace=T) - sample(value[scenario == scen_1], 1000,replace=T)
-  out <- quantile(dv, probs)
+  out <- quantile(dv, probs, na.rm=TRUE)
   return(out)
 }
 
@@ -140,7 +145,8 @@ mean_quantile <- function(value, scenario, scen_1, scen_2, probs){
 compare_table <- function(data, scen_1, scen_2){
   data <- data %>% group_by(scenario, simul) %>% mutate("New infection" = cumsum(`New infection`),
                                                         "Death" = cumsum(Death)) 
-  tab_out <- data[data$time == max(data$time),] %>%
+  data <- data[data$time == max(data$time), !names(data) %in% c("simul","time")]
+  tab_out <- data %>%
     data.table() %>%
     melt.data.table() %>%
     group_by(variable) %>%
@@ -148,7 +154,6 @@ compare_table <- function(data, scen_1, scen_2){
               intervention= mean(value[scenario == scen_2]),
               mean = mean_sample(value, scenario ,scen_2=scen_2, scen_1=scen_1),
               q2.5 = mean_quantile(value, scenario ,scen_2=scen_2, scen_1=scen_1, probs = .025),
-              q97.5 = mean_quantile(value, scenario ,scen_2=scen_2, scen_1=scen_1, probs = .975)) %>%
-    ungroup()
+              q97.5 = mean_quantile(value, scenario ,scen_2=scen_2, scen_1=scen_1, probs = .975))
   return(tab_out)
 }
