@@ -297,3 +297,46 @@ The different parameters can be specified in yaml files that can be
 stored under `params/scenarios` in your project (or another directory to
 be stipulated). An example file is provided [on this
 repo](/params/scenarios).
+
+## How to read the output figure
+
+The top panel shows the evolution over time of 6 key indicators of the
+HIV epidemics for the simulated cohort during the study period. The
+curves represent the average value of these indicators over the
+simulations for the baseline and intervention scenarios separately;the
+shaded regions around these curves represent the uncertainty.
+
+The bottom panel shows the total number of deaths and new infections by
+scenario across the simulations. The peak of the two distributions
+showcases the most likely number of death and new infection in both
+scenarios according to the simulations; the width of the distributions
+highlights the uncertainty in the number of deaths and new infections
+across the simulations.
+
+## How are DALYs calculated:
+
+Each agent participating in the simulation is in either of these 4
+states: HIV case, AIDS case not on ART, AIDS case on ART, dead.
+
+*Years of life with disability (YLD):* we calculate the number of years
+of life with disability for each agent as the number of years in each of
+the 3 living states multiplied by the disability weight associated with
+that state (.135 for HIV infected, .505 for AIDS case not on ART, .167
+for AIDS case on ART - see GBD reference for weights). We sum individual
+YLD across all agents in each simulation to get the total number of YLD
+per simulation.
+
+*Years of life lost (YLL):* we calculate the number of years of life
+lost for each agent as the difference between the end of the study
+period and the date of death. If the agent is alive at the end of the
+simulation, its contribution to the YLL is 0. We sum individual YLL
+across all agents in each simulation to get the total number of YLD per
+simulation.
+
+*DALYs:* DALYs are calculated for each simulation by adding the number
+of YLD and YLL.
+
+For example, a HIV-infected agent in the simulation for 2.5 years before
+developing AIDS, initiated on ART 1.5 years after developing AIDS, and
+dying 2 years later and 1.3 years before the end of the study period
+will contribute to: (2.5*.135 + 1.5*.505 + 2\*.167) + 1.3 = 2.729 DALYs

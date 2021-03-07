@@ -6,6 +6,7 @@
 #' @return 
 #' This function returns summary plots of the simulations' results. 
 #' @importFrom data.table melt.data.table
+#' @importFrom data.table setDT
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarize
 #' @importFrom ggplot2 aes
@@ -26,38 +27,75 @@
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 element_line
 #' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 geom_vline
 #' @importFrom data.table data.table
 #' @importFrom dplyr filter
+#' @importFrom viridis viridis
 #' @export
-result_comparison_plot <- function(res){
-  res <- res %>% group_by(scenario, simul) %>% mutate("New infection" = cumsum(`New infection`),
-                                               "Death" = cumsum(Death)) 
-  res <- res[!names(res) == "simul"]
+result_comparison_plot <- function(res,h=3){
   p <- suppressWarnings(res %>%
                           data.table() %>%
                           melt.data.table(id.vars = c("time","scenario")) %>%
                           group_by(time,scenario, variable) %>%
-                          summarize(mean = mean(value, na.rm=TRUE),
-                                    q2.5 = quantile(value, probs = .025, na.rm=TRUE),
-                                    q97.5 = quantile(value, probs = .975, na.rm=TRUE)))
+                          summarize(mean = mean(value),
+                                    q2.5 = quantile(value, probs = .025, na.rm = T),
+                                    q97.5 = quantile(value, probs = .975, na.rm = T)) )
+  p1 <- p %>% filter(variable != "Death" & variable != "New infection" & variable != "simul")
+  p2 <- suppressWarnings(res %>%
+                           data.table() %>%
+                           melt.data.table(id.vars = c("time","scenario","simul"))) %>%
+    filter(variable == "Death" | variable == "New infection") %>%
+    group_by(scenario, variable,simul) %>%
+    summarize(deaths_cum = sum(value))
   
-  gg <- ggplot(data = p, aes(x = time, y = mean, group = scenario)) +
+  tmp <- suppressWarnings(setDT(res) %>%
+                            data.table::melt(id.vars = c("time","scenario","simul"),
+                                             value.name = "outcome"))
+  
+  p1 <- tmp[(variable != "Death" & variable != "New infection" & variable != "simul"),
+            list(mean = mean(outcome, na.rm = T),
+                 `2.5%` = quantile(outcome, probs = .025,na.rm=T),
+                 `97.5%` = quantile(outcome, probs = .975,na.rm=T)),by = 'time,scenario,variable']
+  
+  p2 <- tmp[(variable == "Death" | variable == "New infection"),
+            list(sum = sum(outcome, na.rm = T)),by = 'scenario,variable,simul']
+  
+  gg1 <- ggplot(data = p1, aes(x = time, y = mean, group = scenario)) +
     geom_line(aes(colour = scenario)) +
-    geom_ribbon(data = p, aes(ymin= q2.5, ymax=q97.5, fill = scenario), linetype=2, alpha=0.1) +
+ #   geom_ribbon(data = p1, aes(ymin= q2.5, ymax=q97.5, fill = scenario), linetype=2, alpha=0.1) +
+    geom_ribbon(data = p1, aes(ymin= `2.5%`, ymax=`97.5%`, fill = scenario), linetype=2, alpha=0.1) +
     facet_wrap(~variable, scales = "free") +
-    labs(x ='Time', y = 'Outcome',
+    labs(x ='Week', y = 'Outcome',
          title = paste0("Simulation results")) +
     theme_bw() +
-    scale_fill_manual(values = c("#0d4e93", "#ffaf37")) +
-    scale_color_manual(values=c("#0d4e93", "#ffaf37"))+
+    scale_fill_manual(values = c("#0d4e93", "#ffdc00")) +
+    scale_color_manual(values=c("#0d4e93", "#ffdc00"))+
+    scale_fill_manual(values = viridis(length(unique(tmp$scenario)))) +
+    scale_color_manual(values=viridis(length(unique(tmp$scenario))))+
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(limits = c(0, NA))+
     guides(fill=FALSE) +
     theme(strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
           strip.text = element_text(size = 10),
           panel.grid.major = element_blank(), panel.grid.minor  = element_blank(),
+          axis.line = element_line(colour = "black"), plot.title = element_text(hjust = 0.5, size = 14)) +
+    geom_vline(xintercept = h*52, linetype = "dotted")
+  
+  gg2 <- ggplot(data = p2,
+                  aes(x=sum, fill=scenario)) + geom_density(alpha=.3)+
+    facet_wrap(~variable, scales = "free") +
+    theme_bw() +
+    scale_fill_manual(values = c("#0d4e93", "#ffdc00")) +
+    scale_color_manual(values=c("#0d4e93", "#ffdc00")) +
+    scale_fill_manual(values = viridis(length(unique(tmp$scenario)))) +
+    scale_color_manual(values=viridis(length(unique(tmp$scenario))))+
+    labs(x ='Outcome', y = 'Probability') +
+    theme(strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
+          strip.text = element_text(size = 10),
+          panel.grid.major = element_blank(), panel.grid.minor  = element_blank(),
           axis.line = element_line(colour = "black"), plot.title = element_text(hjust = 0.5, size = 14))
-
+  
+  gg <- gridExtra::grid.arrange(gg1,gg2)
   return(gg)
 }
 
@@ -71,9 +109,11 @@ DALY_comparison <- function(daly){
   
   ggplot(daly, aes(x=dalys, fill=scenario)) + geom_density(alpha=.3)+
     theme_bw() +
-    scale_fill_manual(values = c("#0d4e93", "#ffaf37")) +
-    scale_color_manual(values=c("#0d4e93", "#ffaf37")) +
-    labs(x ='DALYs', y = '',
+    scale_fill_manual(values = c("#0d4e93", "#ffdc00")) +
+    scale_color_manual(values=c("#0d4e93", "#ffdc00")) +
+    scale_fill_manual(values = viridis(length(unique(daly$scenario)))) +
+    scale_color_manual(values=viridis(length(unique(daly$scenario))))+
+    labs(x ='DALYs', y = 'Probability',
          title = paste0("Simulation results")) +
     theme(strip.background = element_rect(color="white", fill="white", size=1.5, linetype="solid"),
           strip.text = element_text(size = 10),
@@ -120,10 +160,6 @@ make_pyramid <- function(summary_results){
     scale_fill_brewer(palette = "Set1") + 
     theme_bw()
 }
-
-
-
-
 
 mean_sample <- function(value, scenario, scen_1, scen_2){
   dv <- sample(value[scenario == scen_2],1000,replace=T) - sample(value[scenario == scen_1], 1000,replace=T)

@@ -4,7 +4,7 @@
 \alias{result_comparison_plot}
 \title{Module to produce graphical outputs to visualize simulations' results}
 \usage{
-result_comparison_plot(res)
+result_comparison_plot(res, h = 3)
 }
 \arguments{
 \item{res}{object with simulations results (deaths, new infections, # patients off and on treatment, # of lost to follow-up)
